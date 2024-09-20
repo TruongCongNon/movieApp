@@ -1,7 +1,7 @@
 import "./index.css"
 const App = () => {
   return (
-    <div>App</div>
+    <div className="font-bold text-lg">Movie App</div>
   )
 }
 export default App
