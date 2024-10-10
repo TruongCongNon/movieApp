@@ -3,7 +3,6 @@ import "./FeatureMovies.css";
 import Movie from "./Movie/Movie";
 import PaginateIndicator from "./PaginateIndicator/PaginateIndicator";
 import Interval from "./Interval/Interval";
-// import Interval from "./Interval/Interval";
 
 const FeatureMovies = () => {
   const [movies, setMovies] = useState([]);
@@ -20,12 +19,11 @@ const FeatureMovies = () => {
       const data = await res.json();
       const popularMovies = data.results.slice(0, 4);
       setMovies(popularMovies);
-      setActiveMovieId(popularMovies[0].id); // Đặt activeMovieId cho movie đầu tiên
+      setActiveMovieId(popularMovies[0].id);
       console.log(popularMovies);
     });
   }, []);
 
-  // Kiểm tra giá trị activeMovieId
   console.log("Active Movie ID: ", activeMovieId);
 
   return (
