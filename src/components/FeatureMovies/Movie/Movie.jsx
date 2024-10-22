@@ -1,17 +1,26 @@
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Images from "../../images/Images";
+import { useModelContext } from "../../../context/ModelProvider";
+import { Link } from "react-router-dom";
 
 const Movie = (props) => {
   console.log({ props });
   const {
-    data: { backdrop_path, title, release_date, overview },
+    data: { id, backdrop_path, title, release_date, overview },
   } = props;
-
+  const { openPopup } = useModelContext();
+  console.log("MV -> " + props.trailerVideoKey);
   return (
     <div>
-      <img
-        src={`https://image.tmdb.org/t/p/original/${backdrop_path}`}
-        className="aspect-video brightness-50"
+      <Images
+        src={
+          backdrop_path &&
+          `https://image.tmdb.org/t/p/original/${backdrop_path}`
+        }
+        className="aspect-video w-full brightness-50"
+        width={900}
+        height={500}
       />
       <div className="absolute bottom-[30%] left-8 w-1/2 sm:w-1/3">
         <div className="mb-2 font-bold sm:text-[2vw]">{title}</div>
@@ -25,25 +34,30 @@ const Movie = (props) => {
           </div>
         </div>
         <div className="mt-4">
-          <button className="mr-4 rounded-md bg-white px-4 py-2 text-10 text-black lg:text-lg">
+          <button
+            onClick={() => {
+              openPopup(
+                <iframe
+                  title="Trailer"
+                  src={`https://www.youtube.com/embed/${props.trailerVideoKey}`}
+                  className="aspect-video w-[50vw]"
+                  allowFullScreen
+                />,
+              );
+            }}
+            className="mr-4 rounded-md bg-white px-4 py-2 text-sm text-black lg:text-lg"
+          >
             <FontAwesomeIcon icon={faPlay} /> Trailer
           </button>
-          <button className="rounded-md bg-slate-300/35 px-4 py-2 text-10 text-white lg:text-lg">
-            View Detail
-          </button>
+          <Link to={`/movie/${id}`}>
+            <button className="rounded-md bg-slate-300/35 px-4 py-2 text-10 text-white lg:text-lg">
+              View Detail
+            </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
-
-// Movie.propTypes = {
-//   data: PropTypes.shape({
-//     backdrop_path: PropTypes.string,
-//     title: PropTypes.string,
-//     release_date: PropTypes.string,
-//     overview: PropTypes.string,
-//   }),
-// };
 
 export default Movie;

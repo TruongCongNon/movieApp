@@ -8,9 +8,9 @@ const Interval = ({ movies, setActiveMovieId }) => {
         const nextIndex = (currentIndex + 1) % movies.length;
         return movies[nextIndex].id;
       });
-    }, 2000);
+    }, 100000);
     return () => clearInterval(interval);
   }, [movies, setActiveMovieId]);
-  return <div>Interval</div>;
+  // return <div>Interval</div>;
 };
 export default Interval;

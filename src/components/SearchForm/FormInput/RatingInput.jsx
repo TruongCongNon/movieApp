@@ -1,0 +1,19 @@
+const RatingInput = ({ onChange, name }) => {
+  return (
+    <div>
+      <select
+        id=""
+        className="rounded border"
+        name={name}
+        onChange={onChange}
+        // value={value}
+      >
+        <option>All</option>
+        <option>0-49</option>
+        <option>50-69</option>
+        <option>70-100</option>
+      </select>
+    </div>
+  );
+};
+export default RatingInput;

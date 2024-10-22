@@ -1,30 +1,36 @@
 import { useEffect, useState } from "react";
-import "./FeatureMovies.css";
+
 import Movie from "./Movie/Movie";
 import PaginateIndicator from "./PaginateIndicator/PaginateIndicator";
 import Interval from "./Interval/Interval";
+import Loading from "../Loading/Loading";
+import useFetch from "../../hooks/useFetch";
 
 const FeatureMovies = () => {
-  const [movies, setMovies] = useState([]);
   const [activeMovieId, setActiveMovieId] = useState(null);
+  const { data: popularMovieResponse } = useFetch({
+    url: `/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&include_video=true`,
+  });
 
+  const { data: videoRespone } = useFetch(
+    {
+      url: `/movie/${activeMovieId}/videos`,
+    },
+    { enabled: !!activeMovieId },
+  );
+  const trailerVideoKey = (videoRespone?.results || []).find(
+    (video) => video.type === "Trailer" && video.site === "YouTube",
+  )?.key;
+
+  const movies = (popularMovieResponse.results || []).slice(0, 4);
+  console.table("FM =>  " + trailerVideoKey);
   useEffect(() => {
-    fetch("https://api.themoviedb.org/3/movie/popular", {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YTJlNDdlYTJkOTJkNzY0YjFhYTI2YmMwM2U2MGU3ZCIsIm5iZiI6MTcyODAxNDc0Ni40MDY1NSwic3ViIjoiNjZmZjY1YjFjOWExMGQ0NmVhN2NiOWFiIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.lC1XUJDTN-irJFU4Q8FIKXaIjiEVETi-LH0AZHgmkv0`,
-      },
-    }).then(async (res) => {
-      const data = await res.json();
-      const popularMovies = data.results.slice(0, 4);
-      setMovies(popularMovies);
-      setActiveMovieId(popularMovies[0].id);
-      console.log(popularMovies);
-    });
-  }, []);
-
-  console.log("Active Movie ID: ", activeMovieId);
+    if (movies[0]?.id) {
+      setActiveMovieId(movies[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(movies)]),
+    popularMovieResponse.results || [];
 
   return (
     <div className="relative text-white">
@@ -33,7 +39,11 @@ const FeatureMovies = () => {
           {movies
             .filter((movie) => movie.id === activeMovieId)
             .map((movie) => (
-              <Movie key={movie.id} data={movie} />
+              <Movie
+                key={movie.id}
+                data={movie}
+                trailerVideoKey={trailerVideoKey}
+              />
             ))}
           <Interval
             movies={movies}
@@ -42,7 +52,7 @@ const FeatureMovies = () => {
           />
         </>
       ) : (
-        <div className="h-100vw text-black">Loading....</div>
+        <Loading />
       )}
       <PaginateIndicator
         movies={movies}
