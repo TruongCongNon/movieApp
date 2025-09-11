@@ -11,6 +11,5 @@ const Interval = ({ movies, setActiveMovieId }) => {
     }, 7000);
     return () => clearInterval(interval);
   }, [movies, setActiveMovieId]);
-  // return <div>Interval</div>;
 };
 export default Interval;

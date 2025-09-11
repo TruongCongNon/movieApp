@@ -8,7 +8,7 @@ const Header = () => {
       <div className="flex items-center gap-4 lg:gap-6">
         <Link to="/">
           <img src={Netflix} alt="" className="w-16 sm:w-28" />
-        </Link>
+        </Link> 
         <Link className="lg:text-xl" to="/search?mediaType=movie">
           Movie
         </Link>
